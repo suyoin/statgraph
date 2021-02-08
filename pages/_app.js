@@ -1,5 +1,6 @@
 import Head from "next/head";
 import "../styles/globals.css";
+import { ContextProvider } from "../lib/context";
 import { AnimateSharedLayout } from "framer-motion";
 
 function MyApp({ Component, pageProps }) {
@@ -13,7 +14,9 @@ function MyApp({ Component, pageProps }) {
 				<meta name="theme-color" content="#FF6262" />
 			</Head>
 			<AnimateSharedLayout>
-				<Component {...pageProps} />
+				<ContextProvider>
+					<Component {...pageProps} />
+				</ContextProvider>
 			</AnimateSharedLayout>
 		</>
 	);
