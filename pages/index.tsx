@@ -3,9 +3,26 @@ import Link from "next/link";
 import { useContext } from "react";
 import TextArea from "../components/TextArea";
 import { context } from "../lib/context";
+import getLSRL from "../util/getLSRL";
+import getMean from "../util/getMean";
+import getStandardDeviation from "../util/getStandardDeviation";
 
 export default function Home() {
-	const { input1, setInput1, input2, setInput2 } = useContext(context);
+	const {
+		input1,
+		setInput1,
+		input2,
+		setInput2,
+	} = useContext(context);
+
+	const pattern = /([\d\.]+)/g;
+	const domain: Array<number> = input1
+		.match(pattern)
+		.map((v: string) => parseFloat(v));
+	const range: Array<number> = input2
+		.match(pattern)
+		.map((v: string) => parseFloat(v));
+	const lsrl = getLSRL(domain, range);
 
 	return (
 		<>
@@ -46,23 +63,23 @@ export default function Home() {
 				<p className="text-white italic">
 					Numbers can be delimited by any character that isn't a number.
 				</p>
-				<button
-					className="rounded-full border-2 px-4 py-1 border-red-500 bg-opacity-0 text-red-500 transition duration-300 ease-out bg-red-500 hover:bg-opacity-100 hover:text-gray-800"
-					onClick={() => {
-						const pattern = /([\d\.]+)/g;
 
-						console.log(
-							"X",
-							input1.match(pattern).map((v) => parseFloat(v))
-						);
-						console.log(
-							"Y",
-							input2.match(pattern).map((v) => parseFloat(v))
-						);
-					}}
-				>
-					Submit
-				</button>
+				<p className="text-white w-96">
+					{`Domain: [${domain.join(",")}]`}
+					<br />
+					{`Domain Mean: ${getMean(domain)}`}
+					<br />
+					{`Domain Standard Deviation: ${getStandardDeviation(domain)}`}
+					<br />
+					{`Range: [${range.join(",")}]`}
+					<br />
+					{`Range Mean: ${getMean(range)}`}
+					<br />
+					{`Range Standard Deviation: ${getStandardDeviation(range)}`}
+					<br />
+					<br />
+					{`LSRL: y hat = ${lsrl.intercept} + ${lsrl.b}x`}
+				</p>
 			</motion.div>
 		</>
 	);
